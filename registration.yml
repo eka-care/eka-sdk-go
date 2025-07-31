@@ -1,0 +1,4586 @@
+openapi: 3.1.0
+info:
+  description: ABHA Registration and login APIs
+  title: Registration
+  version: 1.0.0
+servers:
+- description: Production
+  url: https://api.eka.care
+- description: Stage/Sandbox
+  url: https://api.dev.eka.care
+paths:
+  /abdm/na/v1/profile/login/init:
+    post:
+      description: Generates an OTP for login. Supports login via Aadhaar number,
+        mobile number, ABHA number, and ABHA address.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhrLoginOTPRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhrLoginOTPResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Generate OTP
+  /abdm/na/v1/profile/login/phr:
+    post:
+      description: Handles login via Aadhaar number, ABHA number, or mobile number.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhrPhrAddressLoginRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhrVerifyLoginOTPResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Login
+  /abdm/na/v1/profile/login/verify:
+    post:
+      description: Verifies the login OTP. If logging in via ABHA address, this endpoint
+        also completes the login process.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhrVerifyLoginOTPRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhrVerifyLoginOTPResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Verify OTP
+  /abdm/na/v1/registration/aadhaar/create-phr:
+    post:
+      description: This API is used to create a new ABHA address
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Create
+  /abdm/na/v1/registration/aadhaar/init:
+    post:
+      description: This endpoint is used to initiate the Aadhaar registration process.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Generate OTP
+  /abdm/na/v1/registration/aadhaar/mobile/resend:
+    post:
+      description: This endpoint is used to resend the mobile otp for aadhaar registration
+        process.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendRequestType2'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResendResponseType2'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Mobile Resend OTP
+  /abdm/na/v1/registration/aadhaar/mobile/verify:
+    post:
+      description: This API operates on a skip logic basis. If the mobile number provided
+        in the second step differs from the one linked to the Aadhaar, this API will
+        be used to verify the new mobile number.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequestType2'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponseType2'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Mobile Verify OTP
+  /abdm/na/v1/registration/aadhaar/resend:
+    post:
+      description: This endpoint is used to resend a otp for aadhaar registration
+        process.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResendResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Resend OTP
+  /abdm/na/v1/registration/aadhaar/verify:
+    post:
+      description: This endpoint is used to verify Aadhaar otp generated for registration
+        using Aadhaar.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Verify OTP
+  /abdm/na/v1/registration/mobile/create-phr:
+    post:
+      description: This API is used to create a new ABHA address for the user.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequestType2'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResponseType2'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Create
+  /abdm/na/v1/registration/mobile/init:
+    post:
+      description: This endpoint is used to initiate the registration process for
+        a mobile number.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitRequestType2'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitResponseType2'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Generate OTP
+  /abdm/na/v1/registration/mobile/resend:
+    post:
+      description: This endpoint is used to resend a mobile registration request.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendRequestType3'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResendResponseType3'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Resend OTP
+  /abdm/na/v1/registration/mobile/verify:
+    post:
+      description: This endpoint allows  to verify a mobile otp.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequestType3'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponseType3'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Verify OTP
+  /abdm/na/v1/registration/phr/check:
+    post:
+      description: This API endpoint allows to check whether provided health id is
+        already present in system.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExistRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsDoesHealthIdExistResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Does Abha Address Exist
+  /abdm/na/v1/registration/suggest:
+    get:
+      description: This API endpoint is used to fetch some suggested abha id that
+        are available on the basis of user details.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: Middle Name
+        in: query
+        name: mn
+        schema:
+          description: Middle Name
+          examples:
+          - Singh
+          type: string
+      - description: Last Name
+        in: query
+        name: ln
+        schema:
+          description: Last Name
+          examples:
+          - Kumar
+          type: string
+      - description: First Name
+        in: query
+        name: fn
+        schema:
+          description: First Name
+          examples:
+          - Raj
+          type: string
+      - description: Date of Birth (YYYY-MM-DD)
+        in: query
+        name: dob
+        schema:
+          description: Date of Birth (YYYY-MM-DD)
+          examples:
+          - "1990-05-15"
+          type: string
+      - description: Transaction id received in the previous api.
+        in: query
+        name: transactionId
+        schema:
+          description: Transaction id received in the previous api.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsSuggestHealthIdResponse'
+          description: OK
+      security:
+      - authApiKey: []
+      summary: Suggest Abha Address
+  /abdm/v1/care-contexts/discover:
+    post:
+      description: "ABDM allows a user to find their health records from any health
+        facility they have visited via the discovery process. \n\nDiscover API returns
+        any unlinked care-context for the ABHA User."
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoverRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoverResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/care-contexts/discover/link/confirm:
+    post:
+      description: Confirm linking for discovered care context
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/care-contexts/discover/link/init:
+    post:
+      description: Initialise the linking for discovered care context.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitRequestType3'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitResponseType4'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/care-contexts/link:
+    post:
+      description: This API is used by HIP to link care contexts.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCareContextLinkingRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "202":
+          description: Accepted
+      security:
+      - authApiKey: []
+      summary: Care context linking
+  /abdm/v1/care-contexts/link/on-confirm:
+    post:
+      description: This API is used by HIP to confirm the linking of care contexts
+        after OTP verification.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsLinkOnConfirmHmisConnect'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+      summary: Discover Link On Confirm
+  /abdm/v1/care-contexts/link/on-init:
+    post:
+      description: This API is used by HIP to initiate the linking of unlinked health
+        records (care contexts). HIP must send an OTP and provide details such as
+        OTP expiry and other related information.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsLinkOnInitHmisConnect'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+      summary: Discover Link On Init
+  /abdm/v1/care-contexts/linked:
+    get:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: Unique identifier for the Health Information Provider (HIP).
+        in: query
+        name: hip_id
+        required: true
+        schema:
+          description: Unique identifier for the Health Information Provider (HIP).
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordsResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/care-contexts/on-discover:
+    post:
+      description: This API is used to send unlinked care contexts to abdm.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsDiscoverCareContextHmisConnect'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+      summary: Discover On Care Contexts
+  /abdm/v1/care-contexts/providers:
+    get:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/approve:
+    post:
+      description: This endpoint is used to approve the consent
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/auto-approval:
+    get:
+      description: Fetch the auto approval policy settings
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+          description: OK
+      security:
+      - authApiKey: []
+    patch:
+      description: Update the auto approval policy settings
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FormDataSettingsRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/create:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentCreateConsentRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentCreateConsentResponse'
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/deny:
+    post:
+      description: This endpoint is used to deny the consent
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DenyRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/details:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentConsentDetailReq'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentConsentDetailResp'
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/list:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentListConsentRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentListConsentResponse'
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/change:
+    post:
+      description: Change the consent pin by providing a old and new pin combination
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/exists:
+    get:
+      description: Returns if the user has already set the consent pin.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExistResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/forgot/init:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitResponseType3'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/forgot/verify:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequestType5'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/reset:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/set:
+    post:
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/pin/verify:
+    post:
+      description: Verify the consent pin to approve/revoke consents
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequestType4'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/consents/revoke:
+    post:
+      description: This endpoint is used to revoke the consent
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/hip/care-context/data/on-fetch:
+    post:
+      description: API for HIP to push care context FHIR data to HIU
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordsHipDataPushRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "202":
+          description: Accepted
+      security:
+      - authApiKey: []
+  /abdm/v1/hip/onboard:
+    post:
+      description: Onboard facility
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsAddFacilityRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsAddFacilityResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/hip/patient/profile/on-share:
+    post:
+      description: This API receives the Token Generated by the facility.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanandshareHipScanAndShareOnRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "202":
+          description: Accepted
+      security:
+      - authApiKey: []
+  /abdm/v1/hiu/care-context/data/on-push:
+    post:
+      description: API for HIU to push care context FHIR parsing status
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordsHiuDataPushRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "202":
+          description: Accepted
+      security:
+      - authApiKey: []
+  /abdm/v1/profile:
+    delete:
+      description: This endpoint removes the specified ABHA profile along with all
+        associated documents, vital records, and any other related data from the system.<Warning>Please
+        note that the ABHA metadata will remain in the ABDM system, as ABDM does not
+        provide a delete option</Warning>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+    get:
+      description: Fetches the ABHA profile of the User. <Note>Please cache these
+        results locally. We do not recommend calling this API on every page load.
+        Evict the cache when there is profile update.</Note>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+          description: OK
+      security:
+      - authApiKey: []
+    patch:
+      description: |-
+        Update Profile Details
+
+        <Note>The API expects all the fields returned by the [Get Profiles API](/api-reference/user-app/abdm-connect/profile/details/profile-details) to be included in the PATCH request body.</Note>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DetailsRequestType2'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "204":
+          description: No Content
+      security:
+      - authApiKey: []
+  /abdm/v1/profile/asset/card:
+    get:
+      description: Fetch the ABHA card.<Note>Please cache these results locally. We
+        do not recommend calling this API on every page load. Evict the cache when
+        there is profile update.</Note>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            image/png:
+              schema:
+                format: binary
+                type: string
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/profile/asset/qr:
+    get:
+      description: Fetch the data for ABHA qr code display. <Note>Please cache these
+        results locally. We do not recommend calling this API on every page load.
+        Evict the cache when there is profile update.</Note><Warning>There is no fixed
+        structure for this JSON; it can vary depending on the creation of ABHA. Generate
+        the QR code based on the content of the response body.</Warning>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - in: query
+        name: format
+        schema:
+          enum:
+          - json
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetQRData'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/profile/kyc/init:
+    post:
+      description: Request otp to initialise the KYC flow
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KycGenerateKycOtpRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycGenerateKycOtpResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/profile/kyc/resend:
+    post:
+      description: Resend otp for KYC
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KycResendKycOtpRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycGenerateKycOtpResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/profile/kyc/verify:
+    post:
+      description: Verify OTP to complete KYC
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KycVerifyKycOtpRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycVerifyKycOtpResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/profile/share:
+    post:
+      description: Fetch the token from a hospital. <Note> Get the hip_id and counter_id
+        by reading the QR code of the Hospital/Clinic.</Note> <Note>Use the device
+        location for the location data</Note>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanandshareRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HipQRScanShareProfileResponseV2'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/provider/{hip_id}:
+    get:
+      description: Fetches the Providers based on the HIP ID.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      - description: Identifier for the Health Information Provider (HIP).
+        in: path
+        name: hip_id
+        required: true
+        schema:
+          description: Identifier for the Health Information Provider (HIP).
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderResponseType2'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/providers:
+    get:
+      description: Fetches the List of Providers.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: Name of the Health Information Provider (HIP), required with
+          a minimum length of 3 characters.
+        in: query
+        name: name
+        required: true
+        schema:
+          description: Name of the Health Information Provider (HIP), required with
+            a minimum length of 3 characters.
+          minLength: 3
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProviderResponseType2'
+                type:
+                - "null"
+                - array
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/registration/pincode/{pincode}:
+    get:
+      description: This API endpoint is used to fetch pincode details.
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: Pincode to fetch its details.
+        in: path
+        name: pincode
+        required: true
+        schema:
+          description: Pincode to fetch its details.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PincodeResolvedPincodeData'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/request:
+    get:
+      description: ""
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: Consent/Subscription/Authorization ID
+        in: query
+        name: id
+        required: true
+        schema:
+          description: Consent/Subscription/Authorization ID
+          type: string
+      - description: Request type
+        in: query
+        name: type
+        schema:
+          description: Request type
+          enum:
+          - consent
+          - subscription
+          - authorization
+          type: string
+      - description: Status of the request
+        in: query
+        name: status
+        schema:
+          description: Status of the request
+          enum:
+          - requested
+          - granted
+          - expired
+          - denied
+          - revoked
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailsResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/requests:
+    get:
+      description: API to list all the Subscriptions / Authorization and Consent requests
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: status of the request
+        in: query
+        name: status
+        required: true
+        schema:
+          description: status of the request
+          enum:
+          - requested
+          - granted
+          - expired
+          - denied
+          - revoked
+          examples:
+          - granted
+          type: string
+      - description: Specifies the type of request being queried.
+        in: query
+        name: type
+        required: true
+        schema:
+          description: Specifies the type of request being queried.
+          enum:
+          - consent
+          - subscription
+          - authorization
+          - all
+          examples:
+          - consent
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListsResponse'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/session/init:
+    post:
+      description: Generate mobile OTP for user session token
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitRequestType4'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitResponseType5'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v1/session/verify:
+    post:
+      description: Verify mobile OTP and get user session token
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequestType6'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponseType4'
+          description: OK
+      security:
+      - authApiKey: []
+  /abdm/v2/profile/share:
+    post:
+      description: Request to generate appointment token at the facility. <Note> Get
+        the hip_id and counter_id by reading the QR code of the Hospital/Clinic.</Note>
+        <Note>Use the device location for the location data</Note>
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: OID is used to Identify the user.
+        in: query
+        name: oid
+        schema:
+          description: OID is used to Identify the user.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanandshareProfileShareRequest'
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "202":
+          content:
+            application/json:
+              schema:
+                properties:
+                  request_id:
+                    description: Request ID to track the status
+                    type: string
+                  status:
+                    enum:
+                    - success
+                    - ' processing'
+                    - ' failed'
+                    type: string
+                type: object
+          description: Accepted
+      security:
+      - authApiKey: []
+  /abdm/v2/profile/share/{request_id}:
+    get:
+      description: Get token number issued by the facility
+      parameters:
+      - description: Partner user ID
+        in: header
+        name: X-User-Id
+        schema:
+          type: string
+      - description: Partner HIP ID
+        in: header
+        name: X-Hip-Id
+        schema:
+          type: string
+      - description: request id received from the POST /abdm/v2/profile/share API
+        in: path
+        name: request_id
+        required: true
+        schema:
+          description: request id received from the POST /abdm/v2/profile/share API
+          type: string
+      responses:
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanandshareResponse'
+          description: OK
+      security:
+      - authApiKey: []
+components:
+  schemas:
+    ApproveConsent:
+      properties:
+        access_mode:
+          enum:
+          - view
+          type: string
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/CommonsCareContext'
+          type:
+          - array
+          - "null"
+        duration:
+          $ref: '#/components/schemas/CommonsDuration'
+        erase_at:
+          format: date-time
+          type: string
+        hi_types:
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+        hip_id:
+          type: string
+      type: object
+    ApproveRequest:
+      properties:
+        consent_artefacts:
+          description: List of consent artefacts.
+          items:
+            $ref: '#/components/schemas/ApproveConsent'
+          type:
+          - array
+          - "null"
+        id:
+          description: Unique identifier of a consent, also called the consent ID.
+          type: string
+      required:
+      - id
+      - consent_artefacts
+      type: object
+    AssetQRData:
+      properties:
+        address:
+          type: string
+        dist name:
+          type: string
+        distlgd:
+          type: string
+        district_name:
+          type: string
+        dob:
+          type: string
+        gender:
+          type: string
+        hid:
+          type: string
+        hidn:
+          type: string
+        mobile:
+          type: string
+        name:
+          type: string
+        phr:
+          type: string
+        state name:
+          type: string
+        statelgd:
+          type: string
+      type: object
+    ChangeRequest:
+      properties:
+        new:
+          description: The new PIN to replace the old one
+          type: string
+        old:
+          description: The current PIN to be updated
+          type: string
+      required:
+      - old
+      - new
+      type: object
+    CommonsCareContext:
+      properties:
+        display:
+          description: Care Context Display Name
+          examples:
+          - Heart Rate 2020
+          type: string
+        id:
+          description: Care Context ID
+          examples:
+          - heart-rate-2020
+          type: string
+      type: object
+    CommonsCareContextIdentifier:
+      properties:
+        cc_ref:
+          type: string
+        patient_ref:
+          type: string
+      type: object
+    CommonsDuration:
+      properties:
+        from:
+          description: Start time of the consent
+          format: date-time
+          type: string
+        to:
+          description: End time of the consent
+          format: date-time
+          type: string
+      type: object
+    CommonsEkaDocReference:
+      properties:
+        clinic_id:
+          examples:
+          - afsdfj786fges87f68g8
+          type: string
+        d_oid:
+          examples:
+          - "162835406498984"
+          type: string
+      type: object
+    CommonsEkaPatientReference:
+      properties:
+        health_id:
+          examples:
+          - bobthebuilder@abdm
+          type: string
+        oid:
+          examples:
+          - "162835406498984"
+          type: string
+      type: object
+    CommonsError:
+      properties:
+        code:
+          description: Error code indicating the type of error
+          type: integer
+        message:
+          description: Detailed error message
+          type: string
+      type: object
+    CommonsHiType:
+      properties:
+        display:
+          description: Display name of the Health Information Type
+          type: string
+        enabled:
+          description: Is the Health Information Type enabled
+          type: boolean
+        id:
+          description: Health Information Type ID
+          enum:
+          - OPConsultation
+          - Prescription
+          - DischargeSummary
+          - DiagnosticReport
+          - ImmunizationRecord
+          - HealthDocumentRecord
+          - WellnessRecord
+          type: string
+      type: object
+    CommonsHip:
+      properties:
+        id:
+          description: Health Information Provider ID
+          examples:
+          - INXXXXX
+          type: string
+        name:
+          description: Name of the Health Information Provider
+          examples:
+          - Apollo Hospital
+          type: string
+      type: object
+    CommonsHipIdentifier:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    CommonsHiu:
+      properties:
+        id:
+          description: Health Information User ID
+          examples:
+          - INXXXXX
+          type: string
+        name:
+          description: Name of the Health Information User
+          examples:
+          - Apollo Hospital
+          type: string
+      type: object
+    CommonsPeriodWithExpiry:
+      properties:
+        expiry:
+          examples:
+          - "2009-11-10T23:00:00Z"
+          format: date-time
+          type: string
+        from:
+          examples:
+          - "2009-11-10T23:00:00Z"
+          format: date-time
+          type: string
+        to:
+          examples:
+          - "2009-11-10T23:00:00Z"
+          format: date-time
+          type: string
+      type: object
+    CommonsPurpose:
+      properties:
+        code:
+          type: string
+        text:
+          type: string
+      type: object
+    CommonsRequester:
+      properties:
+        name:
+          description: Name of the requester.
+          examples:
+          - Dr John
+          type: string
+      type: object
+    ConfirmRequest:
+      properties:
+        otp:
+          description: OTP received on the mobile number.
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      - otp
+      type: object
+    ConfirmResponse:
+      properties:
+        cc_ref_id:
+          description: Unique identifier for the care context.
+          type: string
+        txn_id:
+          type: string
+      type: object
+    ConsentCareContextDetail:
+      properties:
+        created_at:
+          type: string
+        display:
+          type: string
+        documents:
+          items:
+            $ref: '#/components/schemas/ConsentDocumentDetail'
+          type: array
+        id:
+          type: string
+        status:
+          type: string
+      type: object
+    ConsentConsentDetail:
+      properties:
+        c_at:
+          format: date-time
+          type: string
+        consent_id:
+          type: string
+        consent_init_id:
+          type: string
+        period:
+          $ref: '#/components/schemas/CommonsPeriodWithExpiry'
+        status:
+          type: string
+        u_at:
+          format: date-time
+          type: string
+      type: object
+    ConsentConsentDetailData:
+      properties:
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/ConsentCareContextDetail'
+          type:
+          - array
+          - "null"
+        hip:
+          $ref: '#/components/schemas/ConsentHipDetail'
+      type: object
+    ConsentConsentDetailReq:
+      properties:
+        consent_id:
+          type: string
+        health_id:
+          type: string
+      type: object
+    ConsentConsentDetailResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ConsentConsentDetailData'
+          type:
+          - array
+          - "null"
+      type: object
+    ConsentCreateConsentRequest:
+      properties:
+        appointment_id:
+          type: string
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/CommonsCareContextIdentifier'
+          type: array
+        hip_identifier:
+          $ref: '#/components/schemas/CommonsHipIdentifier'
+        hiu:
+          $ref: '#/components/schemas/ConsentEkaHiuIdentifier'
+        patient:
+          $ref: '#/components/schemas/CommonsEkaPatientReference'
+        period:
+          $ref: '#/components/schemas/CommonsPeriodWithExpiry'
+        purpose:
+          enum:
+          - Self Requested
+          - Care management
+          - Public Health
+          - Disease Specific Health Research
+          type: string
+        record_types:
+          description: |-
+            Available options: OPConsultation,
+            Prescription,
+            DischargeSummary,
+            DiagnosticReport,
+            ImmunizationRecord,
+            HealthDocumentRecord,
+            WellnessRecord
+          enum:
+          - OPConsultation
+          - Prescription
+          - DischargeSummary
+          - DiagnosticReport
+          - ImmunizationRecord
+          - HealthDocumentRecord
+          - WellnessRecord
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+      type: object
+    ConsentCreateConsentResponse:
+      properties:
+        consent_init_id:
+          type: string
+      type: object
+    ConsentDocumentDetail:
+      properties:
+        fhir_url:
+          type: string
+        id:
+          type: string
+      type: object
+    ConsentEkaHiuIdentifier:
+      properties:
+        clinic_id:
+          examples:
+          - afsdfj786fges87f68g8
+          type: string
+        d_oid:
+          examples:
+          - "162835406498984"
+          type: string
+        requester:
+          $ref: '#/components/schemas/ConsentRequester'
+      type: object
+    ConsentHipDetail:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    ConsentListConsentRequest:
+      properties:
+        hiu:
+          $ref: '#/components/schemas/CommonsEkaDocReference'
+        patient:
+          $ref: '#/components/schemas/CommonsEkaPatientReference'
+      type: object
+    ConsentListConsentResponse:
+      properties:
+        consents:
+          items:
+            $ref: '#/components/schemas/ConsentConsentDetail'
+          type:
+          - array
+          - "null"
+      type: object
+    ConsentRequester:
+      properties:
+        identifier:
+          $ref: '#/components/schemas/ConsentRequesterIden'
+        name:
+          type: string
+      type: object
+    ConsentRequesterIden:
+      properties:
+        system:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+      type: object
+    CreateRequest:
+      properties:
+        abha_address:
+          description: ABHA Address to be linked with the ABHA Number
+          examples:
+          - shyam.eka@abdm
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      - abha_address
+      type: object
+    CreateRequestType2:
+      properties:
+        abha_address:
+          description: The ABHA address to be created for the user.
+          type: string
+        profile:
+          $ref: '#/components/schemas/DetailsRequestType2'
+          description: Profile details of the user.
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      - abha_address
+      - profile
+      type: object
+    CreateResponse:
+      properties:
+        eka:
+          $ref: '#/components/schemas/RegistrationEkaIds'
+          description: Eka IDs
+        hint:
+          description: Hint for the mobile number
+          type: string
+        profile:
+          $ref: '#/components/schemas/ProfileResponse'
+          description: ABHA Profile
+        refresh_token:
+          description: Refresh token for the user
+          type:
+          - "null"
+          - string
+        skip_state:
+          enum:
+          - abha_end
+          - confirm_mobile_otp
+          - abha_select
+          - abha_create
+          type: string
+        token:
+          description: Access token for the user
+          type:
+          - "null"
+          - string
+        txn_id:
+          type: string
+      type: object
+    CreateResponseType2:
+      properties:
+        eka:
+          $ref: '#/components/schemas/RegistrationEkaIds'
+          description: Eka IDs, will be present if SkipState is abha_end
+        profile:
+          $ref: '#/components/schemas/ProfileResponse'
+        refresh_token:
+          description: Refresh token for the user
+          type:
+          - "null"
+          - string
+        skip_state:
+          enum:
+          - abha_end
+          - confirm_mobile_otp
+          - abha_select
+          - abha_create
+          type: string
+        success:
+          description: Indicates whether the API response is successful
+          type: boolean
+        token:
+          description: Access token for the user, will be present if SkipState is
+            abha_end
+          type:
+          - "null"
+          - string
+      type: object
+    DenyRequest:
+      properties:
+        id:
+          description: Unique identifier of a consent, also called the consent ID.
+          type: string
+        reason:
+          description: Users reason for denial in plain text
+          type: string
+      required:
+      - id
+      type: object
+    DetailsCareContext:
+      properties:
+        display:
+          type: string
+        id:
+          type: string
+      type: object
+    DetailsProviders:
+      properties:
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/DetailsCareContext'
+          type:
+          - array
+          - "null"
+        consent_artefact_id:
+          description: Consent Artefact ID, it's a sub-part of consent. In a consent
+            every Provide will have unique consent artefact id'
+          type:
+          - "null"
+          - string
+        hip:
+          $ref: '#/components/schemas/CommonsHip'
+          description: HIP details
+      type: object
+    DetailsRequestType2:
+      properties:
+        address:
+          description: Address of the user.
+          examples:
+          - 123, ABC Street
+          type:
+          - "null"
+          - string
+        day_of_birth:
+          description: Day of birth of the user.
+          examples:
+          - 1
+          type: integer
+        first_name:
+          description: First name of the user.
+          examples:
+          - Shyam
+          type: string
+        gender:
+          description: Gender of the user ('M' for male, 'F' for female, 'O' for other).
+          enum:
+          - M
+          - F
+          - O
+          examples:
+          - M
+          type: string
+        last_name:
+          description: Last name of the user.
+          examples:
+          - Singh
+          type:
+          - "null"
+          - string
+        middle_name:
+          description: Middle name of the user.
+          examples:
+          - Kumar
+          type:
+          - "null"
+          - string
+        month_of_birth:
+          description: Month of birth of the user.
+          examples:
+          - 1
+          type: integer
+        pincode:
+          description: Pincode of the user's address.
+          examples:
+          - "110001"
+          type: string
+        year_of_birth:
+          description: Year of birth of the user.
+          examples:
+          - 1990
+          type: integer
+      required:
+      - first_name
+      - gender
+      - year_of_birth
+      - month_of_birth
+      - day_of_birth
+      - pincode
+      type: object
+    DetailsResponse:
+      properties:
+        access_mode:
+          enum:
+          - view
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        duration:
+          $ref: '#/components/schemas/CommonsDuration'
+        erase_at:
+          format: date-time
+          type: string
+        hi_types:
+          description: List of HI Types
+          items:
+            $ref: '#/components/schemas/CommonsHiType'
+          type:
+          - array
+          - "null"
+        hiu:
+          $ref: '#/components/schemas/CommonsHiu'
+          description: HIU details
+        id:
+          type: string
+        providers:
+          description: List of Providers/Failities details
+          items:
+            $ref: '#/components/schemas/DetailsProviders'
+          type:
+          - array
+          - "null"
+        purpose:
+          $ref: '#/components/schemas/CommonsPurpose'
+          description: Purpose of the request
+        requester:
+          $ref: '#/components/schemas/CommonsRequester'
+          description: Requester details
+        status:
+          enum:
+          - requested
+          - granted
+          - expired
+          - denied
+          - revoked
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    DiscoverCareContext:
+      properties:
+        display:
+          type: string
+        id:
+          type: string
+      type: object
+    DiscoverPatient:
+      properties:
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/DiscoverCareContext'
+          type:
+          - array
+          - "null"
+        display:
+          type: string
+        id:
+          type: string
+      type: object
+    DiscoverRequest:
+      properties:
+        hip_id:
+          description: Unique identifier for the Health Information Provider (HIP).
+          type: string
+        ref_id:
+          description: The unique identifier for the patient within the Healthcare
+            Information Provider (HIP), such as the patient's registration ID, email
+            address, or phone number used at the hospital or lab.
+          type: string
+      required:
+      - hip_id
+      type: object
+    DiscoverResponse:
+      properties:
+        patient:
+          items:
+            $ref: '#/components/schemas/DiscoverPatient'
+          type:
+          - array
+          - "null"
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    ExistRequest:
+      properties:
+        abha_address:
+          description: ABHA address to check if it's already present in the system.
+          type: string
+      required:
+      - abha_address
+      type: object
+    ExistResponse:
+      properties:
+        exist:
+          description: Indicates if the user has already set the consent PIN.
+          type: boolean
+      type: object
+    FormDataSettingsRequest:
+      properties:
+        oid:
+          description: OID is used to Identify the user.
+          type: string
+      type: object
+    GenericError:
+      properties:
+        code:
+          type: integer
+        error:
+          type: string
+        source_error:
+          $ref: '#/components/schemas/SourceErr'
+      type: object
+    HipLocation:
+      properties:
+        latitude:
+          type:
+          - "null"
+          - string
+        longitude:
+          type:
+          - "null"
+          - string
+      type: object
+    HipQRScanShareProfileResponseV2:
+      properties:
+        address:
+          description: Address associated with the HIP.
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        footer:
+          type: string
+        hip_id:
+          description: Health Information Provider (HIP) identifier
+          type: string
+        hip_name:
+          description: Name of the Health Information Provider (HIP)
+          type: string
+        request_id:
+          description: Unique identifier for the request
+          type: string
+        show_token_screen:
+          type: boolean
+        token_expiry:
+          format: date-time
+          type: string
+        token_number:
+          type: string
+      type: object
+    InitRequest:
+      properties:
+        aadhaar_number:
+          description: Aadhaar Number for the abha registration
+          examples:
+          - "123456789012"
+          type: string
+      required:
+      - aadhaar_number
+      type: object
+    InitRequestType2:
+      properties:
+        mobile_number:
+          description: mobile number for the abha registration
+          type: string
+      required:
+      - mobile_number
+      type: object
+    InitRequestType3:
+      properties:
+        cc_ref_id:
+          description: Unique Identifier for the care context.
+          type: string
+        patient_ref_id:
+          description: The unique identifier for the patient within the Healthcare
+            Information Provider (HIP).
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      - patient_ref_id
+      - cc_ref_id
+      type: object
+    InitRequestType4:
+      properties:
+        abha_address:
+          description: Abha Address to generate user session token.
+          examples:
+          - sudo@abdm
+          type: string
+      required:
+      - abha_address
+      type: object
+    InitResponse:
+      properties:
+        hint:
+          description: Hint message for the mobile number
+          examples:
+          - OTP sent successfully to your mobile number ******90973
+          type:
+          - "null"
+          - string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          examples:
+          - 5d060cad-a93b-4edf-p3ef-bd412f69s400
+          type: string
+      type: object
+    InitResponseType2:
+      properties:
+        hint:
+          description: Hint message for the mobile number
+          examples:
+          - OTP sent successfully to your mobile number ******90973
+          type:
+          - "null"
+          - string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          examples:
+          - 5d060cad-a93b-4edf-p3ef-bd412f69s400
+          type: string
+      type: object
+    InitResponseType3:
+      properties:
+        expiry_in_minutes:
+          type: integer
+        medium:
+          description: Medium which is used to generate otp
+          examples:
+          - mobile
+          type: string
+        otp_medium_value:
+          description: Value of medium
+          examples:
+          - "9225828688"
+          type: string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    InitResponseType4:
+      properties:
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    InitResponseType5:
+      properties:
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    KycGenerateKycOtpRequest:
+      properties:
+        identifier:
+          description: The identifier, which will be the 14-digit ABHA number for
+            the 'abha-number' method or the 12-digit Aadhaar number for the 'aadhaar'
+            method.
+          type: string
+        method:
+          description: The method used for KYC, such as ABHA number or Aadhaar.
+          enum:
+          - abha-number
+          - aadhaar
+          type: string
+        user_x_token:
+          description: user authorization token
+          type: string
+      required:
+      - method
+      - identifier
+      type: object
+    KycGenerateKycOtpResponse:
+      properties:
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    KycResendKycOtpRequest:
+      properties:
+        txn_id:
+          description: Transaction ID received in the previous API request.
+          type: string
+      required:
+      - txn_id
+      type: object
+    KycVerifyKycOtpRequest:
+      properties:
+        otp:
+          description: OTP received on the mobile number.
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+        user_x_token:
+          description: user authorization token
+          type: string
+      required:
+      - txn_id
+      - otp
+      type: object
+    KycVerifyKycOtpResponse:
+      properties:
+        txn_id:
+          type: string
+      type: object
+    LinkCareContextLinkingRequest:
+      properties:
+        abha_address:
+          type: string
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/LinkCareContextMeta'
+          type:
+          - array
+          - "null"
+        oid:
+          type: string
+        partner_user_id:
+          type: string
+      type: object
+    LinkCareContextMeta:
+      properties:
+        care_context_id:
+          type: string
+        display:
+          type: string
+        hi_type:
+          enum:
+          - OPConsultation
+          - Prescription
+          - DischargeSummary
+          - DiagnosticReport
+          - ImmunizationRecord
+          - HealthDocumentRecord
+          - WellnessRecord
+          type: string
+      type: object
+    ListsRequestDetail:
+      properties:
+        created_at:
+          description: Time when the consent was created
+          format: date-time
+          type: string
+        duration:
+          $ref: '#/components/schemas/CommonsDuration'
+        hiu:
+          $ref: '#/components/schemas/CommonsHiu'
+          description: Health Information User,the requesting entity Clinic hospital
+        id:
+          description: Unique identifier for the consent/authorization/subscription
+          type: string
+        purpose:
+          $ref: '#/components/schemas/CommonsPurpose'
+        requester:
+          $ref: '#/components/schemas/CommonsRequester'
+      type: object
+    ListsResponse:
+      properties:
+        authorizations:
+          description: List of authorizations
+          items:
+            $ref: '#/components/schemas/ListsRequestDetail'
+          type:
+          - array
+          - "null"
+        consents:
+          description: List of consents
+          items:
+            $ref: '#/components/schemas/ListsRequestDetail'
+          type:
+          - array
+          - "null"
+        subscriptions:
+          description: List of subscriptions
+          items:
+            $ref: '#/components/schemas/ListsRequestDetail'
+          type:
+          - array
+          - "null"
+      type: object
+    ModelsAddFacilityRequest:
+      properties:
+        clinic_id:
+          type: string
+        hip_id:
+          type: string
+        name:
+          type: string
+      required:
+      - clinic_id
+      - hip_id
+      - name
+      type: object
+    ModelsAddFacilityResponse:
+      properties:
+        hip_code:
+          type: string
+        hip_id:
+          type: string
+        hip_name:
+          type: string
+        scan_share_url:
+          type: string
+      type: object
+    ModelsCareContext:
+      properties:
+        display:
+          description: Display name or identifier for the care context
+          type: string
+        ref_num:
+          description: Unique reference number for the care context
+          type: string
+      type: object
+    ModelsDiscoverCareContextHmisConnect:
+      properties:
+        error:
+          $ref: '#/components/schemas/ModelsError'
+          description: Error details, if any
+        patients:
+          description: List of patients including reference number, display name,
+            care contexts, and HI type
+          items:
+            $ref: '#/components/schemas/ModelsPatient'
+          type:
+          - array
+          - "null"
+        request_id:
+          description: Request ID that is received in the webhook call
+          type: string
+        txn_id:
+          description: transaction id that is received in the webhhok call.
+          type: string
+      required:
+      - txn_id
+      - request_id
+      type: object
+    ModelsDoesHealthIdExistResponse:
+      properties:
+        exists:
+          description: Indicates whether the health ID exist.
+          type: boolean
+      type: object
+    ModelsError:
+      properties:
+        code:
+          description: Error code indicating the type of error
+          type: integer
+        message:
+          description: Detailed error message
+          type: string
+      type: object
+    ModelsLinkOnConfirmHmisConnect:
+      properties:
+        error:
+          $ref: '#/components/schemas/ModelsError'
+          description: Error details, if any occurred during the process.
+        patients:
+          description: List of patients including reference number, display name,
+            care contexts, and HI type
+          items:
+            $ref: '#/components/schemas/ModelsPatient'
+          type:
+          - array
+          - "null"
+        request_id:
+          description: Request ID that is received in the webhook call.
+          type: string
+      required:
+      - request_id
+      type: object
+    ModelsLinkOnInitHmisConnect:
+      properties:
+        error:
+          $ref: '#/components/schemas/ModelsError'
+          description: Error details, if any occurred during the process.
+        otp_expiry:
+          description: Expiry time of the OTP sent for linking care contexts.
+          type: string
+        ref_num:
+          description: patient reference number.
+          type: string
+        request_id:
+          description: Request ID that is received in the webhook call.
+          type: string
+        txn_id:
+          description: Transaction ID received in the webhook call.
+          type: string
+      required:
+      - txn_id
+      - request_id
+      type: object
+    ModelsPatient:
+      properties:
+        care_contexts:
+          description: List of care contexts of the patient
+          items:
+            $ref: '#/components/schemas/ModelsCareContext'
+          type:
+          - array
+          - "null"
+        display:
+          description: Display name or identifier for the patient
+          type: string
+        hi_type:
+          description: Type of health information (HI)
+          enum:
+          - OPConsultation
+          - Prescription
+          - DischargeSummary
+          - DiagnosticReport
+          - ImmunizationRecord
+          - HealthDocumentRecord
+          - WellnessRecord
+          type: string
+        ref_num:
+          description: patient reference number.
+          type: string
+      type: object
+    ModelsSuggestHealthIdResponse:
+      properties:
+        suggestions:
+          description: List of suggested abha addresses
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+      type: object
+    PhrLoginOTPRequest:
+      properties:
+        identifier:
+          description: The identifier for the selected login method.
+          examples:
+          - "9876543210"
+          type: string
+        method:
+          description: The method used for login.
+          enum:
+          - phr_address
+          - abha_number
+          - mobile
+          - aadhaar_number
+          examples:
+          - mobile
+          type: string
+      type: object
+    PhrLoginOTPResponse:
+      properties:
+        hint:
+          type: string
+        txn_id:
+          description: Transaction ID for the next API call.
+          type: string
+      type: object
+    PhrPhrAddressLoginRequest:
+      properties:
+        phr_address:
+          description: Abha address used to login
+          type: string
+        txn_id:
+          description: Transaction id received in the previous api response
+          type: string
+      type: object
+    PhrVerifyLoginOTPRequest:
+      properties:
+        otp:
+          description: Otp received in the user mobile no.
+          type: string
+        txn_id:
+          description: Transaction id received in the previous api response
+          type: string
+      type: object
+    PhrVerifyLoginOTPResponse:
+      properties:
+        abha_profiles:
+          description: Abha profiles of the user.
+          items:
+            $ref: '#/components/schemas/VerifyAbhaProfile'
+          type: array
+        eka:
+          $ref: '#/components/schemas/RegistrationEkaIds'
+        hint:
+          type: string
+        profile:
+          $ref: '#/components/schemas/ProfileResponse'
+          description: Profile of the user
+        skip_state:
+          description: Determines the next page navigation based on the skip state
+          enum:
+          - abha_select
+          - abha_end
+          - abha_create
+          type: string
+        txn_id:
+          description: Transaction ID for the next api call.
+          type: string
+      type: object
+    PincodeResolvedPincodeData:
+      properties:
+        dist_code:
+          description: Unique code representing the district
+          examples:
+          - "339"
+          type: string
+        dist_name:
+          description: Name of the district
+          examples:
+          - Ranchi
+          type: string
+        pincode:
+          description: Postal code of the area
+          examples:
+          - "834001"
+          type: string
+        state_code:
+          description: Unique code representing the state
+          examples:
+          - "20"
+          type: string
+        state_name:
+          description: Name of the state
+          examples:
+          - Jharkhand
+          type: string
+      type: object
+    ProfileResponse:
+      properties:
+        abha_address:
+          description: ABHA address associated with the user.
+          examples:
+          - shyam@abdm
+          type: string
+        abha_number:
+          description: ABHA number assigned to the user.
+          examples:
+          - 12-3456-7856-8912
+          type:
+          - "null"
+          - string
+        address:
+          description: Address of the user.
+          type:
+          - "null"
+          - string
+        day_of_birth:
+          description: Day of birth of the user.
+          type:
+          - "null"
+          - integer
+        first_name:
+          description: User's first name.
+          type:
+          - "null"
+          - string
+        gender:
+          description: Gender of the user (M - Male, F - Female, O - Other).
+          enum:
+          - M
+          - F
+          - O
+          examples:
+          - M
+          type: string
+        kyc_verified:
+          description: Indicates whether the user’s KYC is verified.
+          type:
+          - "null"
+          - boolean
+        last_name:
+          description: User's last name.
+          type:
+          - "null"
+          - string
+        middle_name:
+          description: User's middle name.
+          type:
+          - "null"
+          - string
+        mobile:
+          description: Mobile number of the user.
+          type:
+          - "null"
+          - string
+        month_of_birth:
+          description: Month of birth of the user.
+          type:
+          - "null"
+          - integer
+        pincode:
+          description: Pincode of the user's address.
+          type:
+          - "null"
+          - string
+        year_of_birth:
+          description: Year of birth of the user.
+          type:
+          - "null"
+          - integer
+      type: object
+    ProviderHipDetail:
+      properties:
+        hip_id:
+          description: Identifier for the Health Information Provider (HIP).
+          type: string
+        hip_name:
+          description: Name of the Health Information Provider (HIP).
+          type:
+          - "null"
+          - string
+      type: object
+    ProviderResponse:
+      properties:
+        providers:
+          items:
+            $ref: '#/components/schemas/ProviderHipDetail'
+          type:
+          - array
+          - "null"
+      type: object
+    ProviderResponseType2:
+      properties:
+        city:
+          description: City where the Health Information Provider (HIP) is located.
+          type:
+          - "null"
+          - string
+        hip_id:
+          description: Identifier for the Health Information Provider (HIP).
+          type: string
+        hip_name:
+          description: Name of the Health Information Provider (HIP).
+          type:
+          - "null"
+          - string
+        state:
+          description: State where the Health Information Provider (HIP) is located.
+          type:
+          - "null"
+          - string
+      type: object
+    RecordsCareContext:
+      properties:
+        care_context_id:
+          description: Unique identifier for the care context.
+          type: string
+        created_at:
+          type: string
+        display:
+          type: string
+        status:
+          enum:
+          - ConsentRaised
+          - ConsentGranted
+          - ConsentError
+          - DataRequested
+          - DataReceived
+          - DataProcessing
+          - DataProcessed
+          - InvalidDataReceived
+          - NoDataAvailable
+          type: string
+      type: object
+    RecordsDHPubKey:
+      properties:
+        expiry:
+          type: string
+        key_value:
+          type: string
+        parameters:
+          type: string
+      type: object
+    RecordsEntry:
+      properties:
+        care_context_id:
+          type: string
+        checksum:
+          description: Checksum of the non encrypted plain text fhir data
+          type: string
+        content:
+          description: Encrypted content
+          type: string
+        media:
+          enum:
+          - application/fhir+json
+          type: string
+      type: object
+    RecordsHipDataPushRequest:
+      properties:
+        entries:
+          items:
+            $ref: '#/components/schemas/RecordsEntry'
+          type:
+          - array
+          - "null"
+        key_information:
+          $ref: '#/components/schemas/RecordsKeyMaterial'
+        transaction_id:
+          type: string
+      type: object
+    RecordsHiuDataPushRequest:
+      properties:
+        consent_id:
+          type: string
+        status_response:
+          items:
+            $ref: '#/components/schemas/RecordsStatusResponse'
+          type:
+          - array
+          - "null"
+        transaction_id:
+          type: string
+      type: object
+    RecordsKeyMaterial:
+      properties:
+        crypto_alg:
+          type: string
+        curve:
+          type: string
+        dh_public_key:
+          $ref: '#/components/schemas/RecordsDHPubKey'
+        nonce:
+          type: string
+      type: object
+    RecordsResponse:
+      properties:
+        care_contexts:
+          items:
+            $ref: '#/components/schemas/RecordsCareContext'
+          type:
+          - array
+          - "null"
+      required:
+      - care_contexts
+      type: object
+    RecordsStatusResponse:
+      properties:
+        care_context_id:
+          type: string
+        description:
+          type: string
+        success:
+          type: boolean
+      type: object
+    RegistrationEkaIds:
+      properties:
+        min_token:
+          description: Minimum token required for authentication
+          type: string
+        oid:
+          type:
+          - "null"
+          - string
+        uuid:
+          type:
+          - "null"
+          - string
+      type: object
+    ResendRequest:
+      properties:
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          examples:
+          - 5d060cad-a93b-4edf-p3ef-bd412f69s400
+          type: string
+      required:
+      - txn_id
+      type: object
+    ResendRequestType2:
+      properties:
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      type: object
+    ResendRequestType3:
+      properties:
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      type: object
+    ResendResponse:
+      properties:
+        hint:
+          description: Hint message for the mobile number
+          examples:
+          - OTP sent successfully to your mobile number ******90973
+          type:
+          - "null"
+          - string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          examples:
+          - 5d060cad-a93b-4edf-p3ef-bd412f69s400
+          type: string
+      type: object
+    ResendResponseType2:
+      properties:
+        hint:
+          type:
+          - "null"
+          - string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    ResendResponseType3:
+      properties:
+        hint:
+          type: string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    RevokeRequest:
+      properties:
+        consent_artefacts:
+          description: List of consent artefacts to be revoked.
+          items:
+            type: string
+          type:
+          - array
+          - "null"
+      type: object
+    ScanandshareAddress:
+      properties:
+        district:
+          description: District of the address
+          type: string
+        line:
+          description: Address line
+          type: string
+        pin_code:
+          description: Pin code of the address
+          type: string
+        state:
+          description: State of the address
+          type: string
+      required:
+      - pin_code
+      type: object
+    ScanandshareHipScanAndShareOnRequest:
+      properties:
+        abha_address:
+          description: Abha address of the patient.
+          type: string
+        error:
+          $ref: '#/components/schemas/CommonsError'
+          description: Error details, if any occurred during the process.
+        hip_code:
+          description: Counter id at the facility
+          type: string
+        request_id:
+          description: Request ID that is received in the webhook call.
+          type: string
+        token:
+          $ref: '#/components/schemas/ScanandshareToken'
+          description: Token details.
+      required:
+      - request_id
+      - abha_address
+      type: object
+    ScanandsharePatient:
+      properties:
+        abhaAddress:
+          description: ABHA address of the patient
+          type: string
+        address:
+          $ref: '#/components/schemas/ScanandshareAddress'
+          description: Address of the patient
+        dayOfBirth:
+          description: Day of birth of the patient
+          type: string
+        gender:
+          description: Gender of the patient
+          type: string
+        mobile_no:
+          description: Phone number of the patient
+          type: string
+        monthOfBirth:
+          description: Month of birth of the patient
+          type: string
+        name:
+          description: Name of the patient
+          type: string
+        yearOfBirth:
+          description: Year of birth of the patient
+          type: string
+      required:
+      - abhaAddress
+      - name
+      - gender
+      - dayOfBirth
+      - monthOfBirth
+      - yearOfBirth
+      - mobile_no
+      type: object
+    ScanandshareProfileShareRequest:
+      properties:
+        counter_id:
+          description: Counter ID from QR Code
+          type: string
+        hip_id:
+          description: HIP ID from QR Code
+          type: string
+        location:
+          $ref: '#/components/schemas/HipLocation'
+          description: Location of the user
+        patient:
+          $ref: '#/components/schemas/ScanandsharePatient'
+        request_id:
+          description: Request ID to track the status of the profile share
+          type: string
+        user_x_token:
+          description: user authorization token
+          type: string
+      required:
+      - hip_id
+      - counter_id
+      type: object
+    ScanandshareRequest:
+      properties:
+        counter_id:
+          description: Counter ID from QR Code
+          type: string
+        hip_id:
+          description: HIP ID from QR Code
+          type: string
+        location:
+          $ref: '#/components/schemas/HipLocation'
+          description: Location of the user
+        patient:
+          $ref: '#/components/schemas/ScanandsharePatient'
+          description: Patient details
+      required:
+      - counter_id
+      - hip_id
+      type: object
+    ScanandshareResponse:
+      properties:
+        expiry:
+          description: Expiry time for the token
+          examples:
+          - "2025-07-25T18:36:20+05:30"
+          format: date-time
+          type:
+          - "null"
+          - string
+        request_id:
+          description: Request ID to track the status
+          type: string
+        status:
+          enum:
+          - success
+          - ' processing'
+          - ' failed'
+          type: string
+        token_number:
+          description: Token number for the scan and share
+          type: string
+      type: object
+    ScanandshareToken:
+      properties:
+        expires_at:
+          description: Token expiry time
+          type: integer
+        token_number:
+          description: Token number
+          type: string
+      required:
+      - token_number
+      type: object
+    SetRequest:
+      properties:
+        pin:
+          description: Pin to authorize consent.
+          examples:
+          - "1234"
+          type: string
+      required:
+      - pin
+      type: object
+    SettingsResponse:
+      properties:
+        status:
+          description: Auto approval status
+          enum:
+          - enabled
+          - disabled
+          type: string
+      type: object
+    SourceErr:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      type: object
+    VerifyAbhaProfile:
+      properties:
+        abha_address:
+          type: string
+        kyc_verified:
+          type: string
+        name:
+          type: string
+      type: object
+    VerifyRequest:
+      properties:
+        mobile:
+          description: 10 digit mobile number to be linked with ABHA, this mobile
+            number can be different from the mobile number linked with the Aadhaar.
+            ABHA Created will be linked with this mobile number.
+          type: string
+        otp:
+          description: OTP received on the mobile number.
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous api response.
+          type: string
+      required:
+      - txn_id
+      - otp
+      - mobile
+      type: object
+    VerifyRequestType2:
+      properties:
+        otp:
+          description: OTP received on the mobile number
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      - otp
+      type: object
+    VerifyRequestType3:
+      properties:
+        otp:
+          description: OTP received on the mobile number
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - txn_id
+      - otp
+      type: object
+    VerifyRequestType4:
+      properties:
+        pin:
+          description: PIN to authorize consent.
+          examples:
+          - "1234"
+          type: string
+        scope:
+          type: string
+      required:
+      - pin
+      type: object
+    VerifyRequestType5:
+      properties:
+        otp:
+          description: OTP received on the mobile number.
+          type: string
+        txn_id:
+          description: Transaction ID received in the previous API response.
+          type: string
+      required:
+      - otp
+      - txn_id
+      type: object
+    VerifyRequestType6:
+      properties:
+        otp:
+          description: OTP received on the mobile number.
+          type: string
+        txn_id:
+          description: Transaction ID received in the session/init API response.
+          type: string
+      required:
+      - txn_id
+      - otp
+      type: object
+    VerifyResponse:
+      properties:
+        eka:
+          $ref: '#/components/schemas/RegistrationEkaIds'
+          description: Eka IDs, will be present if SkipState is abha_end
+        hint:
+          description: Hint for the mobile number
+          type:
+          - "null"
+          - string
+        profile:
+          $ref: '#/components/schemas/ProfileResponse'
+        refresh_token:
+          description: Refresh token for the user, will be present if SkipState is
+            abha_end
+          type:
+          - "null"
+          - string
+        skip_state:
+          enum:
+          - abha_end
+          - confirm_mobile_otp
+          - abha_select
+          - abha_create
+          type: string
+        token:
+          description: Access token for the user, will be present if SkipState is
+            abha_end
+          type:
+          - "null"
+          - string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    VerifyResponseType2:
+      properties:
+        eka:
+          $ref: '#/components/schemas/RegistrationEkaIds'
+        hint:
+          type:
+          - "null"
+          - string
+        profile:
+          $ref: '#/components/schemas/ProfileResponse'
+        refresh_token:
+          type:
+          - "null"
+          - string
+        skip_state:
+          enum:
+          - abha_end
+          - confirm_mobile_otp
+          - abha_select
+          - abha_create
+          type: string
+        token:
+          type:
+          - "null"
+          - string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    VerifyResponseType3:
+      properties:
+        abha_profiles:
+          description: ABHA profiles, will be present if user has created ABHA.
+          items:
+            $ref: '#/components/schemas/VerifyAbhaProfile'
+          type:
+          - array
+          - "null"
+        eka:
+          $ref: '#/components/schemas/RegistrationEkaIds'
+          description: Eka IDs, will be present if SkipState is abha_end
+        skip_state:
+          enum:
+          - abha_end
+          - confirm_mobile_otp
+          - abha_select
+          - abha_create
+          type: string
+        txn_id:
+          description: Transaction ID required for the next API call.
+          type: string
+      type: object
+    VerifyResponseType4:
+      properties:
+        refresh_token:
+          description: Token used to obtain a new access token.
+          type:
+          - "null"
+          - string
+        token:
+          description: Access token for the user.
+          type: string
+      type: object
+  securitySchemes:
+    authApiKey:
+      description: The API requires a Bearer token (JWT) for authentication.
+      scheme: bearer
+      type: http

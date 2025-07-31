@@ -1,3 +1,3 @@
-module github.com/eka-care/abdm-sdk-go
+module github.com/eka-care/eka-sdk-go
 
-go 1.24.2
+go 1.24.4
