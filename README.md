@@ -2,18 +2,6 @@
 
 A comprehensive and extensible Go SDK for the ABDM (Ayushman Bharat Digital Mission) API, following best practices from AWS and New Relic SDKs.
 
-## Features
-
-- **Extensible Architecture**: Modular design with service-based organization
-- **Middleware Support**: Built-in support for logging, metrics, retries, and authentication
-- **Configuration Options**: Flexible configuration using functional options pattern
-- **Error Handling**: Comprehensive error handling with detailed error messages
-- **Type Safety**: Strongly typed requests and responses
-- **Context Support**: Full context support for cancellation and timeouts
-- **Retry Logic**: Configurable retry strategies with exponential backoff
-- **Logging**: Structured logging with configurable log levels
-- **Metrics**: Built-in metrics collection for monitoring
-
 ## Installation
 
 ```bash
@@ -245,10 +233,6 @@ func main() {
 }
 ```
 
-## Architecture
-
-The SDK follows a modular architecture inspired by AWS SDK:
-
 ```
 eka-sdk-go/
 ├── abdm/                    # Main SDK package
@@ -263,14 +247,6 @@ eka-sdk-go/
 │   └── errors/            # Error handling
 └── example/               # Usage examples
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
 
 ## License
 
