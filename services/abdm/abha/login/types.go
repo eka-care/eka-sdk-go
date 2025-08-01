@@ -1,5 +1,7 @@
 package login
 
+import "github.com/eka-care/eka-sdk-go/services/abdm/abha"
+
 // InitLoginRequest represents the request for generating login OTP
 type InitLoginRequest struct {
 	Identifier string      `json:"identifier"`
@@ -29,12 +31,12 @@ type VerifyLoginOTPRequest struct {
 
 // VerifyLoginOTPResponse represents the response for login OTP verification
 type VerifyLoginOTPResponse struct {
-	AbhaProfiles []AbhaProfile `json:"abha_profiles"`
-	Eka          EkaIDs        `json:"eka"`
-	Hint         string        `json:"hint"`
-	Profile      Profile       `json:"profile"`
-	SkipState    string        `json:"skip_state"`
-	TxnID        string        `json:"txn_id"`
+	AbhaProfiles []AbhaProfile  `json:"abha_profiles"`
+	Eka          EkaIDs         `json:"eka"`
+	Hint         string         `json:"hint"`
+	Profile      Profile        `json:"profile"`
+	SkipState    abha.SkipState `json:"skip_state"`
+	TxnID        string         `json:"txn_id"`
 }
 
 // AbhaProfile represents ABHA profile information
@@ -76,9 +78,9 @@ type PhrAddressLoginRequest struct {
 
 // PhrAddressLoginResponse represents the response for login
 type PhrAddressLoginResponse struct {
-	Eka       EkaIDs  `json:"eka"`
-	Hint      string  `json:"hint"`
-	Profile   Profile `json:"profile"`
-	SkipState string  `json:"skip_state"`
-	TxnID     string  `json:"txn_id"`
+	Eka       EkaIDs         `json:"eka"`
+	Hint      string         `json:"hint"`
+	Profile   Profile        `json:"profile"`
+	SkipState abha.SkipState `json:"skip_state"`
+	TxnID     string         `json:"txn_id"`
 }
