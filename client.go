@@ -16,7 +16,7 @@
 //
 // # Alternative Configuration
 //
-// For explicit configuration:
+// For explicit configuration (not recommended for production):
 //
 //	client := ekasdk.New(
 //		ekasdk.WithEnvironment(ekasdk.EnvironmentProduction),
@@ -26,6 +26,13 @@
 //	if err := client.Login(ctx); err != nil {
 //		log.Fatal(err)
 //	}
+//
+// # Security Best Practices
+//
+// - Use environment variables for all credentials
+// - Never commit credentials to version control
+// - Use different credentials for different environments
+// - Store secrets in secure credential management systems
 package ekasdk
 
 import (
@@ -218,13 +225,6 @@ func NewFromEnv() *Client {
 		options.Environment = Environment(env)
 	}
 
-	if apiKey := os.Getenv("EKA_API_KEY"); apiKey != "" {
-		// For backward compatibility, treat EKA_API_KEY as client ID if no client ID is set
-		if options.ClientID == "" {
-			options.ClientID = apiKey
-		}
-	}
-
 	if clientID := os.Getenv("EKA_CLIENT_ID"); clientID != "" {
 		options.ClientID = clientID
 	}
@@ -316,8 +316,12 @@ func (c *Client) Login(ctx context.Context) error {
 	cfg := c.config.(*config.Config)
 
 	// Check if we have required client credentials
-	if cfg.ClientID == "" || cfg.ClientSecret == "" {
-		return fmt.Errorf("client ID and client secret are required for authentication")
+	if cfg.ClientID == "" {
+		return fmt.Errorf("client ID is required for authentication. Set EKA_CLIENT_ID environment variable or use WithClientID() option")
+	}
+
+	if cfg.ClientSecret == "" {
+		return fmt.Errorf("client secret is required for authentication. Set EKA_CLIENT_SECRET environment variable or use WithClientSecret() option")
 	}
 
 	// Create a client credentials provider
@@ -332,7 +336,7 @@ func (c *Client) Login(ctx context.Context) error {
 	// Get credentials to trigger initial login
 	credentials, err := provider.Retrieve(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to authenticate: %w", err)
+		return fmt.Errorf("failed to authenticate with provided credentials: %w", err)
 	}
 
 	// Set the authorization token in config for ABDM client

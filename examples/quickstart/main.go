@@ -14,6 +14,10 @@ func main() {
 	ctx := context.Background()
 
 	// Step 1: Create SDK client from environment variables
+	// The SDK looks for credentials in this order:
+	// 1. EKA_CLIENT_ID and EKA_CLIENT_SECRET (required)
+	// 2. Explicit configuration via options
+	//
 	// Set these environment variables:
 	// export EKA_ENVIRONMENT=production
 	// export EKA_CLIENT_ID=your-client-id

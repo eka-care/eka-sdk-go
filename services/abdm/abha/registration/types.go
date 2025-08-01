@@ -1,5 +1,7 @@
 package registration
 
+import "github.com/eka-care/eka-sdk-go/services/abdm/abha"
+
 // ===============================
 // Aadhaar Registration Types
 // ===============================
@@ -25,7 +27,7 @@ type VerifyRequest struct {
 // VerifyResponse represents the response from Aadhaar verify
 type VerifyResponse struct {
 	TxnID        string           `json:"txn_id"`
-	SkipState    string           `json:"skip_state"`
+	SkipState    abha.SkipState   `json:"skip_state"`
 	Profile      *ProfileResponse `json:"profile,omitempty"`
 	Token        *string          `json:"token,omitempty"`
 	RefreshToken *string          `json:"refresh_token,omitempty"`
@@ -53,7 +55,7 @@ type MobileVerifyRequest struct {
 // MobileVerifyResponse represents the response from mobile verify in Aadhaar flow
 type MobileVerifyResponse struct {
 	TxnID        string           `json:"txn_id"`
-	SkipState    string           `json:"skip_state"`
+	SkipState    abha.SkipState   `json:"skip_state"`
 	Profile      *ProfileResponse `json:"profile,omitempty"`
 	Token        *string          `json:"token,omitempty"`
 	RefreshToken *string          `json:"refresh_token,omitempty"`
@@ -81,7 +83,7 @@ type CreateRequest struct {
 // CreateResponse represents the response from ABHA address creation via Aadhaar
 type CreateResponse struct {
 	TxnID        string           `json:"txn_id"`
-	SkipState    string           `json:"skip_state"`
+	SkipState    abha.SkipState   `json:"skip_state"`
 	Profile      *ProfileResponse `json:"profile,omitempty"`
 	Token        *string          `json:"token,omitempty"`
 	RefreshToken *string          `json:"refresh_token,omitempty"`
@@ -113,7 +115,7 @@ type MobileVerifyOTPRequest struct {
 // MobileVerifyOTPResponse represents the response from mobile verify OTP
 type MobileVerifyOTPResponse struct {
 	TxnID        string              `json:"txn_id"`
-	SkipState    string              `json:"skip_state"`
+	SkipState    abha.SkipState      `json:"skip_state"`
 	AbhaProfiles []VerifyAbhaProfile `json:"abha_profiles,omitempty"`
 	Eka          *EkaIds             `json:"eka,omitempty"`
 }
@@ -138,7 +140,7 @@ type MobileCreateRequest struct {
 
 // MobileCreateResponse represents the response from ABHA address creation via mobile
 type MobileCreateResponse struct {
-	SkipState    string           `json:"skip_state"`
+	SkipState    abha.SkipState   `json:"skip_state"`
 	Success      bool             `json:"success"`
 	Profile      *ProfileResponse `json:"profile,omitempty"`
 	Token        *string          `json:"token,omitempty"`
