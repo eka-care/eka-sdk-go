@@ -17,7 +17,7 @@ go get github.com/eka-care/eka-sdk-go
 
 ### 3. Set Up Authentication
 
-The SDK uses environment variables for secure credential management following industry best practices (similar to AWS SDK).
+The SDK uses environment variables for secure credential management following industry best practices.
 
 #### Recommended Method (Environment Variables)
 

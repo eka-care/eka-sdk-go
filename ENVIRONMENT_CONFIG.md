@@ -1,6 +1,6 @@
 # Environment Configuration
 
-The Eka SDK supports comprehensive environment-based configuration following industry best practices (similar to AWS SDK, Google Cloud SDK). This approach provides secure, flexible, and deployment-friendly credential management.
+The Eka SDK supports comprehensive environment-based configuration following industry best practices. This approach provides secure, flexible, and deployment-friendly credential management.
 
 ## Quick Setup
 
@@ -127,10 +127,6 @@ spec:
 ```
 
 ### Cloud Platforms
-
-**AWS:**
-- Use AWS Secrets Manager or Parameter Store
-- Set environment variables in ECS/Lambda/Elastic Beanstalk
 
 **Google Cloud:**
 - Use Secret Manager

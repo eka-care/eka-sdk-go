@@ -1,6 +1,6 @@
 # Authentication
 
-The SDK handles authentication automatically using OAuth 2.0 client credentials flow with automatic token management, following industry best practices similar to AWS SDK and Google Cloud SDK.
+The SDK handles authentication automatically using OAuth 2.0 client credentials flow with automatic token management, following industry best practices.
 
 ## Quick Start
 
