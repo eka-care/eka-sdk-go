@@ -177,71 +177,44 @@ sdk := abdm.New(
 
 ## Services
 
+The SDK provides the following services for ABDM integration:
+
 ### Registration Service
+- **Aadhaar Registration**: Initialize and verify ABHA registration using Aadhaar
+- **Mobile Registration**: Create ABHA account using mobile number
+- **ABHA Creation**: Generate ABHA address and complete registration
 
-The registration service provides methods for ABHA registration via Aadhaar and mobile:
+### Login Service  
+- **Multi-method Login**: Support for Aadhaar, mobile, ABHA number, and ABHA address
+- **OTP Verification**: Secure authentication with OTP validation
+- **Session Management**: Handle login sessions and tokens
 
-```go
-// Aadhaar Registration
-initResp, err := sdk.Registration().AadhaarInit(ctx, headers, abdm.InitRequest{
-    AadhaarNumber: "123456789012",
-})
-
-verifyResp, err := sdk.Registration().AadhaarVerify(ctx, headers, abdm.VerifyRequest{
-    TxnID:  initResp.TxnID,
-    OTP:    "123456",
-    Mobile: "9876543210",
-})
-
-// Mobile Registration
-initResp, err := sdk.Registration().MobileInit(ctx, headers, abdm.MobileInitRequest{
-    MobileNumber: "9876543210",
-})
-
-verifyResp, err := sdk.Registration().MobileVerify(ctx, headers, abdm.MobileVerifyOTPRequest{
-    TxnID: initResp.TxnID,
-    OTP:   "123456",
-})
-```
+### Profile Service
+- **Profile Management**: Retrieve and manage user profile information
+- **Digital Assets**: Generate ABHA cards and QR codes
+- **Session APIs**: Initialize and verify secure sessions
 
 ### Utils Service
+- **Validation**: Validate Aadhaar numbers, mobile numbers, and ABHA addresses
+- **Utilities**: Generate transaction IDs, format dates, retry mechanisms
 
-The utils service provides utility functions for validation and common operations:
+## Basic Usage Examples
 
 ```go
-// Validate inputs
+// Initialize SDK
+sdk := abdm.NewFromEnv()
+
+// Registration example
+initResp, err := sdk.Registration().AadhaarInit(ctx, headers, request)
+
+// Login example  
+loginResp, err := sdk.Login().LoginInit(ctx, headers, request)
+
+// Profile example
+profile, err := sdk.Profile().GetProfile(ctx, headers)
+
+// Utils example
 err := sdk.Utils().ValidateAadhaarNumber("123456789012")
-err := sdk.Utils().ValidateMobileNumber("9876543210")
-err := sdk.Utils().ValidateABHAAddress("john.doe@abdm")
-
-// Generate transaction IDs
-txnID := sdk.Utils().GenerateTransactionID()
-
-// Format dates
-dateStr := sdk.Utils().FormatDate(1990, 5, 15)
-```
-
-## Middleware
-
-The SDK supports middleware for logging, metrics, retries, and authentication:
-
-```go
-// Add logging middleware
-logger := &customLogger{}
-sdk.AddMiddleware(middleware.LoggingMiddleware(logger))
-
-// Add metrics middleware
-metrics := &customMetrics{}
-sdk.AddMiddleware(middleware.MetricsMiddleware(metrics))
-
-// Add retry middleware
-sdk.AddMiddleware(middleware.RetryMiddleware(3, 1*time.Second))
-
-// Add authentication middleware
-sdk.AddMiddleware(middleware.AuthMiddleware(func(req *http.Request) error {
-    // Custom authentication logic
-    return nil
-}))
 ```
 
 ## Error Handling
@@ -262,16 +235,12 @@ if err != nil {
 
 ## Complete Example
 
-Here's a complete example showing the Aadhaar registration flow:
-
 ```go
 package main
 
 import (
     "context"
-    "fmt"
     "log"
-    "time"
 
     "github.com/eka-care/eka-sdk-go/abdm"
 )
@@ -286,56 +255,38 @@ func main() {
         HipID:  "hip456",
     }
 
-    // Step 1: Initialize Aadhaar registration
-    initResp, err := sdk.Registration().AadhaarInit(ctx, headers, abdm.InitRequest{
-        AadhaarNumber: "123456789012",
-    })
+    // Test connectivity
+    if err := sdk.Ping(ctx); err != nil {
+        log.Fatalf("Failed to ping API: %v", err)
+    }
+
+    // Example: Initialize registration
+    initResp, err := sdk.Registration().AadhaarInit(ctx, headers, request)
     if err != nil {
-        log.Fatalf("Failed to initialize: %v", err)
+        log.Fatalf("Registration failed: %v", err)
     }
 
-    fmt.Printf("Transaction ID: %s\n", initResp.TxnID)
-
-    // Step 2: Verify Aadhaar OTP
-    verifyResp, err := sdk.Registration().AadhaarVerify(ctx, headers, abdm.VerifyRequest{
-        TxnID:  initResp.TxnID,
-        OTP:    "123456",
-        Mobile: "9876543210",
-    })
-    if err != nil {
-        log.Fatalf("Failed to verify: %v", err)
-    }
-
-    // Step 3: Create ABHA address (if needed)
-    if verifyResp.SkipState == "abha_create" {
-        createResp, err := sdk.Registration().AadhaarCreatePHR(ctx, headers, abdm.CreateRequest{
-            TxnID:       verifyResp.TxnID,
-            AbhaAddress: "john.doe@abdm",
-        })
-        if err != nil {
-            log.Fatalf("Failed to create ABHA: %v", err)
-        }
-
-        if createResp.Profile != nil {
-            fmt.Printf("ABHA created: %+v\n", createResp.Profile)
-        }
-    }
+    log.Printf("Registration initiated: %s", initResp.TxnID)
 }
 ```
 
-```
-eka-sdk-go/
-├── abdm/                    # Main SDK package
-│   ├── client.go           # Main client implementation
-│   └── types.go            # Request/response types
-├── internal/               # Internal packages
-│   ├── config/            # Configuration management
-│   ├── http/              # HTTP client implementation
-│   ├── middleware/        # Middleware implementations
-│   ├── registration/      # Registration service
-│   ├── utils/             # Utility functions
-│   └── errors/            # Error handling
-└── example/               # Usage examples
+For detailed examples, see the `example/` directory:
+- `api_demo.go` - Complete API workflows
+- `environment_example.go` - Configuration examples  
+- `profile_example.go` - Profile and session APIs
+
+## Error Handling
+
+```go
+resp, err := sdk.Registration().AadhaarInit(ctx, headers, req)
+if err != nil {
+    if apiErr, ok := err.(*abdm.APIError); ok {
+        log.Printf("API Error: %d - %s", apiErr.Code, apiErr.Message)
+    } else {
+        log.Printf("Network Error: %v", err)
+    }
+    return
+}
 ```
 
 ## License

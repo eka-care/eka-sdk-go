@@ -30,6 +30,7 @@ import (
 	"time"
 
 	"github.com/eka-care/eka-sdk-go/abdm/abha/login"
+	"github.com/eka-care/eka-sdk-go/abdm/abha/profile"
 	"github.com/eka-care/eka-sdk-go/abdm/abha/registration"
 
 	"github.com/eka-care/eka-sdk-go/internal/config"
@@ -71,6 +72,7 @@ type Client struct {
 	httpClient   *http.Client
 	registration *registration.Service
 	login        *login.Service
+	profile      *profile.Service
 	utils        *utils.Service
 	middleware   []interfaces.Middleware
 }
@@ -383,8 +385,9 @@ func New(opts ...Option) *Client {
 
 	// Initialize services
 	client.registration = registration.NewService(client)
-	client.utils = utils.NewService(client)
 	client.login = login.NewService(client)
+	client.profile = profile.NewService(client)
+	client.utils = utils.NewService(client)
 
 	return client
 }
@@ -447,6 +450,11 @@ func (c *Client) Utils() *utils.Service {
 // Login returns the login service
 func (c *Client) Login() *login.Service {
 	return c.login
+}
+
+// Profile returns the profile service
+func (c *Client) Profile() *profile.Service {
+	return c.profile
 }
 
 // Ping checks if the API is reachable
