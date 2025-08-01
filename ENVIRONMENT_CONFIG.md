@@ -48,8 +48,6 @@ client := abdm.New(
     abdm.WithTimeout(30*time.Second),
 )
 ```
-    abdm.WithMaxRetries(5),
-)
 
 ## Environment Variables
 
@@ -81,6 +79,30 @@ client := abdm.NewFromEnv()
 // Can still override with additional options
 client := abdm.NewFromEnv(
     abdm.WithUserAgent("my-app/1.0"),
+)
+```
+
+## Migration from Hardcoded URLs
+
+### Before:
+```go
+client := abdm.New(
+    abdm.WithBaseURL("https://api.dev.eka.care"),
+    abdm.WithAuthorizationToken("your-auth-token"),
+)
+```
+
+### After:
+```go
+// Recommended approach with environment variables
+export EKA_ENVIRONMENT=development
+export EKA_AUTH_TOKEN=your-auth-token
+client := abdm.NewFromEnv()
+
+// Or explicit environment configuration
+client := abdm.New(
+    abdm.WithEnvironment(abdm.EnvironmentDevelopment),
+    abdm.WithAuthorizationToken("your-auth-token"),
 )
 ```
 
