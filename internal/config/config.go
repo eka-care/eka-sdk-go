@@ -31,8 +31,9 @@ func (e Environment) GetBaseURL() string {
 type Config struct {
 	Environment        Environment
 	BaseURL            string
-	APIKey             string
-	AuthorizationToken string
+	ClientID           string // Client ID for authentication
+	ClientSecret       string // Client Secret for authentication
+	AuthorizationToken string // JWT token for API calls (set after login)
 	Timeout            time.Duration
 	MaxRetries         int
 	UserAgent          string
@@ -71,12 +72,8 @@ func NewConfig() *Config {
 func (c *Config) GetEnvironment() Environment { return c.Environment }
 func (c *Config) GetBaseURL() string          { return c.BaseURL }
 func (c *Config) GetAPIKey() string {
-	switch {
-	case c.AuthorizationToken != "":
-		return c.AuthorizationToken
-	default:
-		return c.APIKey
-	}
+	// For API calls, we use the JWT authorization token
+	return c.AuthorizationToken
 }
 func (c *Config) GetTimeout() time.Duration           { return c.Timeout }
 func (c *Config) GetMaxRetries() int                  { return c.MaxRetries }
@@ -90,3 +87,12 @@ func (c *Config) GetMaxBackoffDelay() time.Duration   { return c.MaxBackoffDelay
 func (c *Config) GetRequestTimeout() time.Duration    { return c.RequestTimeout }
 func (c *Config) GetResponseTimeout() time.Duration   { return c.ResponseTimeout }
 func (c *Config) GetConnectionTimeout() time.Duration { return c.ConnectionTimeout }
+
+// GetClientID returns the client ID for authentication
+func (c *Config) GetClientID() string { return c.ClientID }
+
+// GetClientSecret returns the client secret for authentication
+func (c *Config) GetClientSecret() string { return c.ClientSecret }
+
+// SetAuthorizationToken sets the JWT token for API calls
+func (c *Config) SetAuthorizationToken(token string) { c.AuthorizationToken = token }
