@@ -1,8 +1,18 @@
 # ABDM SDK for Go
 
-A comprehensive and extensible Go SDK for the ABDM (Ayushman Bharat Digital Mission) API, following best practices from AWS and New Relic SDKs.
+A comprehensive and extensible Go SDK for the ABDM (Ayushman Bharat Digital Mission) API. This SDK is available through the [Eka Care Developer Portal](https://developer.eka.care) for integrating with Eka's healthcare APIs.
 
-## Installation
+## Getting Started
+
+### Prerequisites
+
+Before using this SDK, you need to:
+
+1. **Register at [Eka Care Developer Portal](https://developer.eka.care)**
+2. **Get your API credentials** (client_id and client_secret)
+3. **Obtain an access token** using the [authentication API](https://developer.eka.care/api-reference/authorization/getting-started)
+
+### Installation
 
 ```bash
 go get github.com/eka-care/eka-sdk-go
@@ -10,26 +20,38 @@ go get github.com/eka-care/eka-sdk-go
 
 ## Quick Start
 
+### Authentication
+
+First, authenticate your client to get an access token. Visit the [Eka Care Developer Portal](https://developer.eka.care/api-reference/authorization/getting-started) for detailed authentication steps.
+
+```go
+// Example: After obtaining your access token from the authentication API
+accessToken := "your-access-token-here"
+```
+
+### Basic Usage
+
 ```go
 package main
 
 import (
     "context"
     "log"
-    "time"
 
     "github.com/eka-care/eka-sdk-go/abdm"
 )
 
 func main() {
-    // Create SDK with configuration
-    sdk := abdm.New(
-        abdm.WithBaseURL("https://api.eka.care"),
-        abdm.WithAPIKey("your-api-key"),
-        abdm.WithTimeout(30*time.Second),
-        abdm.WithMaxRetries(3),
-        abdm.WithLogLevel(abdm.LogLevelInfo),
-    )
+    // Recommended: Create SDK using environment variables
+    sdk := abdm.NewFromEnv()
+    
+    // Alternative: Explicit configuration
+    // sdk := abdm.New(
+    //     abdm.WithEnvironment(abdm.EnvironmentProduction), // or EnvironmentDevelopment
+    //     abdm.WithAuthorizationToken("your-access-token"),
+    //     abdm.WithTimeout(30*time.Second),
+    //     abdm.WithMaxRetries(3),
+    // )
 
     ctx := context.Background()
 
@@ -56,14 +78,87 @@ func main() {
 }
 ```
 
+## Environment Configuration
+
+The SDK automatically detects the environment using environment variables (recommended approach):
+
+### Environment Variables
+
+Set these environment variables to configure the SDK:
+
+```bash
+# Required
+export EKA_AUTH_TOKEN="your-access-token"
+
+# Environment (defaults to production)
+export EKA_ENVIRONMENT="production"  # or "development"
+
+# Optional configuration
+export EKA_TIMEOUT="30"              # timeout in seconds
+export EKA_MAX_RETRIES="3"           # number of retries
+export EKA_USER_AGENT="my-app/1.0"   # custom user agent
+export EKA_LOG_LEVEL="info"          # debug, info, warn, error
+```
+
+### Usage with Environment Variables
+
+```go
+// SDK automatically reads configuration from environment variables
+sdk := abdm.NewFromEnv()
+
+// You can still override specific settings
+sdk := abdm.NewFromEnv(
+    abdm.WithTimeout(60*time.Second),  // Override default timeout
+    abdm.WithMaxRetries(5),            // Override default retries
+)
+```
+
+### Manual Configuration (Alternative)
+
+If you prefer explicit configuration instead of environment variables:
+
+```go
+// Production
+sdk := abdm.New(
+    abdm.WithEnvironment(abdm.EnvironmentProduction),
+    abdm.WithAuthorizationToken("your-prod-access-token"),
+)
+
+// Development  
+sdk := abdm.New(
+    abdm.WithEnvironment(abdm.EnvironmentDevelopment),
+    abdm.WithAuthorizationToken("your-dev-access-token"),
+)
+```
+
+| Environment | Base URL |
+|-------------|----------|
+| Production | `https://api.eka.care` |
+| Development | `https://api.dev.eka.care` |
+
+> **Note**: Access tokens are environment-specific. Make sure to use the appropriate token for each environment. Get your tokens from the [Eka Care Developer Portal](https://developer.eka.care).
+
+For more details, see [Environment Configuration Guide](./ENVIRONMENT_CONFIG.md).
+
+## Authentication & Security
+
+This SDK integrates with Eka Care's secure authentication system:
+
+- **Access Tokens**: Include your access token in all API requests
+- **Token Management**: Implement token refresh logic for expired tokens (401 errors)
+- **Environment Separation**: Use different tokens for production and development
+- **Security**: Never expose your client credentials in client-side code
+
+For detailed authentication steps, visit the [Getting Started Guide](https://developer.eka.care/api-reference/authorization/getting-started).
+
 ## Configuration
 
-The SDK uses a functional options pattern for configuration, making it easy to customize behavior:
+The SDK uses a functional options pattern for configuration:
 
 ```go
 sdk := abdm.New(
-    abdm.WithBaseURL("https://api.eka.care"),
-    abdm.WithAPIKey("your-api-key"),
+    abdm.WithEnvironment(abdm.EnvironmentDevelopment),
+    abdm.WithAuthorizationToken("your-access-token"), // Use token from Eka Care auth API
     abdm.WithTimeout(30*time.Second),
     abdm.WithMaxRetries(3),
     abdm.WithUserAgent("my-app/1.0"),
@@ -182,13 +277,8 @@ import (
 )
 
 func main() {
-    // Create SDK
-    sdk := abdm.New(
-        abdm.WithBaseURL("https://api.eka.care"),
-        abdm.WithAPIKey("your-api-key"),
-        abdm.WithTimeout(30*time.Second),
-        abdm.WithMaxRetries(3),
-    )
+    // Create SDK using environment variables (recommended)
+    sdk := abdm.NewFromEnv()
 
     ctx := context.Background()
     headers := abdm.Headers{
@@ -254,4 +344,16 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 
-For support and questions, please open an issue on GitHub or contact the development team.
+For support and questions:
+
+- **Documentation**: Visit the [Eka Care Developer Portal](https://developer.eka.care)
+- **API Reference**: [https://developer.eka.care/api-reference](https://developer.eka.care/api-reference)
+- **Issues**: Open an issue on GitHub
+- **Developer Support**: Contact the development team through the developer portal
+
+## Resources
+
+- [Eka Care Developer Portal](https://developer.eka.care)
+- [Authentication Guide](https://developer.eka.care/api-reference/authorization/getting-started)
+- [API Documentation](https://developer.eka.care/api-reference)
+- [Environment Configuration Guide](./ENVIRONMENT_CONFIG.md)

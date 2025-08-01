@@ -1,16 +1,69 @@
+// Package abdm provides a comprehensive Go SDK for ABDM (Ayushman Bharat Digital Mission) APIs.
+//
+// # Quick Start
+//
+// The recommended way to create a client is using environment variables:
+//
+//	// Set environment variables
+//	// export EKA_ENVIRONMENT=production
+//	// export EKA_AUTH_TOKEN=your-token
+//
+//	client := abdm.NewFromEnv()
+//
+// This approach follows modern cloud-native practices and makes deployment easier.
+//
+// # Alternative Approaches
+//
+// For explicit configuration:
+//
+//	client := abdm.New(
+//		abdm.WithEnvironment(abdm.EnvironmentProduction),
+//		abdm.WithAuthorizationToken("your-token"),
+//	)
 package abdm
 
 import (
 	"context"
-	"github.com/eka-care/eka-sdk-go/internal/abha/login"
-	"github.com/eka-care/eka-sdk-go/internal/abha/registration"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
+
+	"github.com/eka-care/eka-sdk-go/abdm/abha/login"
+	"github.com/eka-care/eka-sdk-go/abdm/abha/registration"
 
 	"github.com/eka-care/eka-sdk-go/internal/config"
 	"github.com/eka-care/eka-sdk-go/internal/interfaces"
 	"github.com/eka-care/eka-sdk-go/internal/utils"
 )
+
+// Environment represents the deployment environment
+type Environment string
+
+const (
+	// EnvironmentProduction represents the production environment
+	EnvironmentProduction Environment = "production"
+	// EnvironmentDevelopment represents the development environment
+	EnvironmentDevelopment Environment = "development"
+)
+
+// String returns the string representation of the environment
+func (e Environment) String() string {
+	return string(e)
+}
+
+// GetBaseURL returns the base URL for the environment
+func (e Environment) GetBaseURL() string {
+	switch e {
+	case EnvironmentProduction:
+		return "https://api.eka.care"
+	case EnvironmentDevelopment:
+		return "https://api.dev.eka.care"
+	default:
+		// Default to production for unknown environments
+		return "https://api.eka.care"
+	}
+}
 
 // Client represents the ABDM SDK client
 type Client struct {
@@ -27,6 +80,7 @@ var _ interfaces.Config = (*Client)(nil)
 
 // Config holds the configuration for the ABDM client
 type Config struct {
+	Environment        Environment   `json:"environment"`
 	BaseURL            string        `json:"base_url"`
 	APIKey             string        `json:"api_key"`
 	AuthorizationToken string        `json:"authorization_token"`
@@ -73,10 +127,12 @@ const (
 // Option represents a configuration option
 type Option func(*Config)
 
-// WithBaseURL sets the base URL
-func WithBaseURL(url string) Option {
+// WithEnvironment sets the environment (recommended approach)
+func WithEnvironment(env Environment) Option {
 	return func(c *Config) {
-		c.BaseURL = url
+		c.Environment = env
+		// Auto-set base URL based on environment
+		c.BaseURL = env.GetBaseURL()
 	}
 }
 
@@ -178,18 +234,91 @@ func WithConnectionTimeout(timeout time.Duration) Option {
 	}
 }
 
+// NewFromEnv creates a new ABDM client using environment variables (RECOMMENDED)
+// This is the preferred way to create clients for modern applications.
+// Environment variables:
+//
+//	EKA_ENVIRONMENT: "production" or "development" (default: "production")
+//	EKA_AUTH_TOKEN: Authorization token (required)
+//	EKA_API_KEY: API key (alternative to auth token)
+//	EKA_TIMEOUT: Request timeout in seconds (default: 30)
+//	EKA_MAX_RETRIES: Maximum number of retries (default: 3)
+//	EKA_USER_AGENT: Custom user agent (default: "eka-sdk-go/1.0")
+//	EKA_LOG_LEVEL: Log level - debug, info, warn, error (default: "info")
+func NewFromEnv(opts ...Option) *Client {
+	options := []Option{}
+
+	// Environment
+	if env := os.Getenv("EKA_ENVIRONMENT"); env != "" {
+		switch env {
+		case "development", "dev":
+			options = append(options, WithEnvironment(EnvironmentDevelopment))
+		case "production", "prod":
+			options = append(options, WithEnvironment(EnvironmentProduction))
+		}
+	}
+
+	// Authentication
+	if authToken := os.Getenv("EKA_AUTH_TOKEN"); authToken != "" {
+		options = append(options, WithAuthorizationToken(authToken))
+	} else if apiKey := os.Getenv("EKA_API_KEY"); apiKey != "" {
+		options = append(options, WithAPIKey(apiKey))
+	}
+
+	// Timeout
+	if timeoutStr := os.Getenv("EKA_TIMEOUT"); timeoutStr != "" {
+		if timeoutSecs, err := strconv.Atoi(timeoutStr); err == nil {
+			options = append(options, WithTimeout(time.Duration(timeoutSecs)*time.Second))
+		}
+	}
+
+	// Max Retries
+	if retriesStr := os.Getenv("EKA_MAX_RETRIES"); retriesStr != "" {
+		if retries, err := strconv.Atoi(retriesStr); err == nil {
+			options = append(options, WithMaxRetries(retries))
+		}
+	}
+
+	// User Agent
+	if userAgent := os.Getenv("EKA_USER_AGENT"); userAgent != "" {
+		options = append(options, WithUserAgent(userAgent))
+	}
+
+	// Log Level
+	if logLevel := os.Getenv("EKA_LOG_LEVEL"); logLevel != "" {
+		switch logLevel {
+		case "debug":
+			options = append(options, WithLogLevel(LogLevelDebug))
+		case "info":
+			options = append(options, WithLogLevel(LogLevelInfo))
+		case "warn":
+			options = append(options, WithLogLevel(LogLevelWarn))
+		case "error":
+			options = append(options, WithLogLevel(LogLevelError))
+		}
+	}
+
+	// Append any additional options passed to the function
+	options = append(options, opts...)
+
+	return New(options...)
+}
+
 // New creates a new ABDM client with the given options
 func New(opts ...Option) *Client {
-	cfg := &Config{}
+	cfg := &Config{
+		// Set defaults
+		Environment: EnvironmentProduction, // Default to production
+	}
 
 	// Apply options
 	for _, opt := range opts {
 		opt(cfg)
 	}
 
-	// Set defaults
+	// Set remaining defaults after options are applied
 	if cfg.BaseURL == "" {
-		cfg.BaseURL = "https://api.eka.care"
+		cfg.BaseURL = cfg.Environment.GetBaseURL()
 	}
 	if cfg.Timeout == 0 {
 		cfg.Timeout = 30 * time.Second
@@ -229,6 +358,7 @@ func New(opts ...Option) *Client {
 
 	// Create internal config
 	internalConfig := &config.Config{
+		Environment:        config.Environment(cfg.Environment),
 		BaseURL:            cfg.BaseURL,
 		APIKey:             cfg.APIKey,
 		AuthorizationToken: cfg.AuthorizationToken,
@@ -284,6 +414,7 @@ func (c *Client) SetHTTPClient(client *http.Client) {
 func (c *Client) GetConfig() *Config {
 	internalConfig := c.config.(*config.Config)
 	return &Config{
+		Environment:        Environment(internalConfig.Environment),
 		BaseURL:            internalConfig.BaseURL,
 		APIKey:             internalConfig.APIKey,
 		AuthorizationToken: internalConfig.AuthorizationToken,

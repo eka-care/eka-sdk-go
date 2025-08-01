@@ -1,6 +1,6 @@
 package abdm
 
-// SkipState represents the possible values for skip_state in registration flows.
+// SkipState represents the possible values for skip_state in registration flows
 type SkipState string
 
 const (

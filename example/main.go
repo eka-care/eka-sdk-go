@@ -3,25 +3,42 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/eka-care/eka-sdk-go/internal/abha/login"
-	"github.com/eka-care/eka-sdk-go/internal/abha/registration"
 	"log"
 	"time"
+
+	"github.com/eka-care/eka-sdk-go/abdm/abha/login"
+	"github.com/eka-care/eka-sdk-go/abdm/abha/registration"
 
 	"github.com/eka-care/eka-sdk-go/abdm"
 	"github.com/eka-care/eka-sdk-go/internal/interfaces"
 )
 
 func main() {
-	// Create a new ABDM client with configuration
-	client := abdm.New(
-		abdm.WithBaseURL("https://api.dev.eka.care"),
+	// Example 1: Using environment variables (RECOMMENDED)
+	fmt.Println("=== Environment Variable Configuration (Recommended) ===")
+	// Set environment variables in your shell or deployment:
+	// export EKA_ENVIRONMENT=development
+	// export EKA_AUTH_TOKEN=your-auth-token
+	envClient := abdm.NewFromEnv(
+		// Can still add additional options if needed
+		abdm.WithUserAgent("example-app/1.0"),
+	)
+	fmt.Printf("Environment client base URL: %s\n", envClient.GetConfig().BaseURL)
+
+	// Example 2: Explicit environment configuration
+	fmt.Println("\n=== Explicit Environment Configuration ===")
+	explicitClient := abdm.New(
+		abdm.WithEnvironment(abdm.EnvironmentDevelopment),
 		abdm.WithAuthorizationToken("your-auth-token"),
 		abdm.WithTimeout(30*time.Second),
 		abdm.WithMaxRetries(3),
 		abdm.WithUserAgent("my-app/1.0"),
 		abdm.WithLogLevel(abdm.LogLevelInfo),
 	)
+	fmt.Printf("Explicit environment client base URL: %s\n", explicitClient.GetConfig().BaseURL)
+
+	// Use the explicit client for examples
+	client := explicitClient
 
 	// Add custom middleware (optional)
 	// logger := &CustomLogger{}
@@ -230,3 +247,6 @@ func exampleUtilityFunctions(client *abdm.Client) {
 		fmt.Println("Retry succeeded")
 	}
 }
+
+// Uncomment to run the comprehensive environment configuration example
+// runEnvironmentExample()

@@ -7,8 +7,29 @@ import (
 	"github.com/eka-care/eka-sdk-go/internal/interfaces"
 )
 
+// Environment represents the deployment environment
+type Environment string
+
+const (
+	EnvironmentProduction  Environment = "production"
+	EnvironmentDevelopment Environment = "development"
+)
+
+// GetBaseURL returns the base URL for the environment
+func (e Environment) GetBaseURL() string {
+	switch e {
+	case EnvironmentDevelopment:
+		return "https://api.dev.eka.care"
+	case EnvironmentProduction:
+		return "https://api.eka.care"
+	default:
+		return "https://api.eka.care" // Default to production
+	}
+}
+
 // Config holds the internal configuration for the ABDM client
 type Config struct {
+	Environment        Environment
 	BaseURL            string
 	APIKey             string
 	AuthorizationToken string
@@ -32,6 +53,7 @@ var _ interfaces.Config = (*Config)(nil)
 // NewConfig creates a new configuration with defaults
 func NewConfig() *Config {
 	return &Config{
+		Environment:       EnvironmentProduction,
 		BaseURL:           "https://api.eka.care",
 		Timeout:           30 * time.Second,
 		MaxRetries:        3,
@@ -46,7 +68,8 @@ func NewConfig() *Config {
 }
 
 // Interface implementation methods
-func (c *Config) GetBaseURL() string { return c.BaseURL }
+func (c *Config) GetEnvironment() Environment { return c.Environment }
+func (c *Config) GetBaseURL() string          { return c.BaseURL }
 func (c *Config) GetAPIKey() string {
 	switch {
 	case c.AuthorizationToken != "":

@@ -8,15 +8,14 @@ import (
 	"github.com/eka-care/eka-sdk-go/internal/interfaces"
 )
 
-// Service handles ABHA login operations.
+// Service handles ABHA login operations
 type Service struct {
 	config interfaces.Config
 	http   *http.Client
 }
 
-// NewService creates a new login service instance.
+// NewService creates a new login service instance
 func NewService(config interfaces.Config) *Service {
-
 	httpClient := http.NewClientFromInterface(config)
 	return &Service{
 		config: config,
@@ -24,9 +23,8 @@ func NewService(config interfaces.Config) *Service {
 	}
 }
 
-// LoginInit generates OTP for login with different identifier methods,
-func (s *Service) LoginInit(ctx context.Context, headers interfaces.Headers, req *InitLoginRequest) (
-	*InitLoginResponse, error) {
+// LoginInit generates OTP for login with different identifier methods
+func (s *Service) LoginInit(ctx context.Context, headers interfaces.Headers, req *InitLoginRequest) (*InitLoginResponse, error) {
 
 	resp, err := s.http.Do(ctx, &interfaces.HTTPRequest{
 		Method:  "POST",
@@ -46,8 +44,8 @@ func (s *Service) LoginInit(ctx context.Context, headers interfaces.Headers, req
 	return &response, nil
 }
 
-func (s *Service) LoginVerify(ctx context.Context, headers interfaces.Headers, req *VerifyLoginOTPRequest) (
-	*VerifyLoginOTPResponse, error) {
+// LoginVerify verifies the login OTP
+func (s *Service) LoginVerify(ctx context.Context, headers interfaces.Headers, req *VerifyLoginOTPRequest) (*VerifyLoginOTPResponse, error) {
 
 	resp, err := s.http.Do(ctx, &interfaces.HTTPRequest{
 		Method:  "POST",
@@ -67,8 +65,8 @@ func (s *Service) LoginVerify(ctx context.Context, headers interfaces.Headers, r
 	return &response, nil
 }
 
-func (s *Service) LoginWithPHRAddress(ctx context.Context, headers interfaces.Headers, req *PhrAddressLoginRequest) (
-	*PhrAddressLoginResponse, error) {
+// LoginWithPHRAddress handles login using PHR address
+func (s *Service) LoginWithPHRAddress(ctx context.Context, headers interfaces.Headers, req *PhrAddressLoginRequest) (*PhrAddressLoginResponse, error) {
 	resp, err := s.http.Do(ctx, &interfaces.HTTPRequest{
 		Method:  "POST",
 		Path:    "/abdm/na/v1/profile/login/phr",
