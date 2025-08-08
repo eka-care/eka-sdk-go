@@ -82,9 +82,10 @@ func main() {
     
     // Now you can use any Eka Care API
     headers := interfaces.Headers{
-        UserID: "your-user-id",
-        HipID:  "your-hip-id",
-    }
+		PatientID:     "eka-user-oid",
+		PartnerUserID: "your-user-id",
+		HipID:         "your-hip-id",
+	}
     
     // Example: ABDM login
     otpReq := &login.InitLoginRequest{
