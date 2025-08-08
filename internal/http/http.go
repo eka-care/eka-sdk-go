@@ -113,8 +113,11 @@ func (c *Client) Do(ctx context.Context, req *interfaces.HTTPRequest) (*interfac
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("User-Agent", c.userAgent)
 
-	if req.Headers.UserID != "" {
-		httpReq.Header.Set("X-User-Id", req.Headers.UserID)
+	if req.Headers.PatientID != "" {
+		httpReq.Header.Set("X-Pt-Id", req.Headers.PatientID)
+	}
+	if req.Headers.PartnerUserID != "" {
+		httpReq.Header.Set("X-Partner-Pt-Id", req.Headers.PartnerUserID)
 	}
 	if req.Headers.HipID != "" {
 		httpReq.Header.Set("X-Hip-Id", req.Headers.HipID)

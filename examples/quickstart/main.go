@@ -32,8 +32,9 @@ func main() {
 
 	// Step 3: Use ABDM login APIs
 	headers := interfaces.Headers{
-		UserID: "your-user-id",
-		HipID:  "your-hip-id",
+		PatientID:     "eka-user-oid",
+		PartnerUserID: "your-user-id",
+		HipID:         "your-hip-id",
 	}
 
 	// Generate OTP for ABDM login

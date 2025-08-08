@@ -49,8 +49,9 @@ type HTTPResponse struct {
 
 // Headers represents request headers
 type Headers struct {
-	UserID string
-	HipID  string
+	PatientID     string
+	PartnerUserID string
+	HipID         string
 }
 
 // Middleware represents a middleware function
